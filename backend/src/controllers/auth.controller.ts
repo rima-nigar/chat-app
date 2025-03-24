@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import prisma from '../db/prisma.js'
 import bcryptjs from 'bcryptjs';
 import generateToken from "../utils/generateToken.js";
-import { error, profile } from 'console';
+
 
 export const signup = async(req:Request, res:Response) => {
     try {
@@ -68,7 +68,7 @@ export const login = async(req:Request, res:Response) => {
 
 		const isPasswordCorrect = await bcryptjs.compare(password, user.password);
 
-		if(isPasswordCorrect) {
+		if(!isPasswordCorrect) {
 			return res.status(400).json({ error: "Invalid credentials"});
 		}
 
@@ -81,7 +81,7 @@ export const login = async(req:Request, res:Response) => {
 			profilePic: user.profilePic
 		})
 	} catch (error:any) {
-		console.log("Error in signup controller", error.message);
+		console.log("Signup error", error.message);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 }
